@@ -2,12 +2,12 @@ include ../Make.defines
 
 OBJS = ../event/*.o
 
-PROGS =	server
+PROGS =	gateway
 
 all:	${PROGS}
 
-server:	mgeeg.o global_gateway_server.o
-		${CC} ${CFLAGS} -o $@ mgeeg.o global_gateway_server.o ${OBJS} ${LIBS}
+gateway:	gateway.o engine.o server.o engine_manager.o acceptor.o
+		${CC} ${CFLAGS} -o $@ gateway.o engine.o server.o engine_manager.o acceptor.o ${LIBS}
 
 clean:
 		rm -f ${PROGS} ${CLEANFILES}
