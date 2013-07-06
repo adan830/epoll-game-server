@@ -20,8 +20,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-engine_t *
-create_engine() {
+engine_t * create_engine() {
     engine_t * e = (engine_t *)malloc(sizeof(engine_t *));
     if (e) {
         init_engine(e);
@@ -29,19 +28,16 @@ create_engine() {
     return e;
 }
 
-void
-start_engine(engine_t * e) {
+void start_engine(engine_t * e) {
     e->engine_server_start(); //启动服务器
 }
 
-void
-free_engine(engine_t * e) {
+void free_engine(engine_t * e) {
     assert(e);
     free(e);
 }
 
-engine_t *
-init_engine(engine_t * e) {
+engine_t * init_engine(engine_t * e) {
     e->engine_server_start = start_server;
     return e;
 }

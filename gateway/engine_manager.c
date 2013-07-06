@@ -16,13 +16,11 @@
 */
 #include "engine.h"
 
-engine_t *
-new_engine() {
+engine_t * new_engine() {
     engine_t *engine = create_engine();
     return engine;
 }
 
-void
-release_engine(engine_t *e) {
+void release_engine(engine_t *e) {
     free_engine(e);
 }

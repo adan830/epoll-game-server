@@ -30,8 +30,7 @@
 #define MAX_EVENTS 500
 
 
-int
-main() {
+int main() {
 
     engine_t * engine;
     engine = new_engine();

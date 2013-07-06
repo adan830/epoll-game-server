@@ -18,19 +18,16 @@
 #include "server.h"
 #include "global.h"
 
-void
-create_acceptor() {
+void create_acceptor() {
 
 }
 
-void
-add_listener(const char * ip, uint32_t port) {
+void add_listener(const char * ip, uint32_t port) {
     struct sockaddr_in serveraddr;
    // int socketfd;
     tcp_listen(ip, port, &serveraddr, 256);
 }
 
-void
-acceptor_run() {
+void acceptor_run() {
 
 }
