@@ -18,15 +18,13 @@
 #include "acceptor.h"
 #include "engine.h"
 
-void
-server_work(engine_t * e) {
+void server_work(engine_t * e) {
     create_acceptor();
     add_listener(e, "127.0.0.1", 1234);
    // acceptor_run();
 }
 
-int32_t
-open_socket(int32_t family, int32_t type, int32_t protocol) {
+int32_t open_socket(int32_t family, int32_t type, int32_t protocol) {
     int32_t sockfd;
     if ( (sockfd = socket(family, type, protocol)) < 0 ) {
         //日志打印
@@ -34,8 +32,7 @@ open_socket(int32_t family, int32_t type, int32_t protocol) {
     return sockfd;
 }
 
-int32_t 
-Bind(int32_t sockfd, const struct sockaddr *myaddr, socklen_t addrlen)  {
+int32_t Bind(int32_t sockfd, const struct sockaddr *myaddr, socklen_t addrlen)  {
     if ( bind(sockfd, myaddr, addrlen) < 0 ) {
             printf("%s\n",strerror(errno));
             return -1;
@@ -43,8 +40,7 @@ Bind(int32_t sockfd, const struct sockaddr *myaddr, socklen_t addrlen)  {
     return 0;
 }
 
-int32_t 
-Listen(int32_t sockfd,int32_t backlog)  {
+int32_t Listen(int32_t sockfd,int32_t backlog)  {
     if( listen(sockfd, backlog) < 0 ) {
             printf("%s\n",strerror(errno));
             return -1;
@@ -52,8 +48,7 @@ Listen(int32_t sockfd,int32_t backlog)  {
     return 0;
 }
 
-void
-tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog) {
+void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog) {
     int32_t listenfd;
     listenfd = open_socket(AF_INET, SOCK_STREAM, 0);
 
