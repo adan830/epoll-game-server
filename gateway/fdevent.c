@@ -1,4 +1,4 @@
-#include "fevent.h"
+#include "fdevent.h"
 
 #include <sys/types.h>
 
@@ -11,8 +11,8 @@
 #include <assert.h>
 
 
-fdevent *fdevent_init(size_t maxfds, fdevent_handler_t type) {
-    fdevent *ev;
+fdevents * fdevent_init(size_t maxfds, fdevent_handler_t type) {
+    fdevents *ev;
 
     ev = calloc(1, sizeof(*ev));
     ev->fdarray = calloc(maxfds, sizeof(*ev->fdarray));
@@ -37,6 +37,8 @@ fdevent *fdevent_init(size_t maxfds, fdevent_handler_t type) {
             return ev;
         case FDEVENT_HANDLER_LIBEV:
             return ev;
+        case FDEVENT_HANDLER_LINUX_RTSIG:
+            return ev;
         case FDEVENT_HANDLER_UNSET:
             break;
     }
@@ -53,11 +55,11 @@ void fdevent_free(fdevents *ev) {
         if(ev->fdarray[i]) free(ev->fdarray[i]); //释放文件描述符数组
     }
 
-    free(ev->fdarray) //释放fdarray指针内存
-    free(ev) //释放ev指针内存
+    free(ev->fdarray); //释放fdarray指针内存
+    free(ev); //释放ev指针内存
 }
 
-void fdevent_reset(fdevents *ev) {
+int fdevent_reset(fdevents *ev) {
     if (ev->reset) return ev->reset(ev);
 
     return 0;
@@ -85,7 +87,6 @@ int fdevent_register(fdevents *ev, int fd, fdevent_handler handler, void *ctx) {
     fdn->ctx = ctx;
     fdn->handler_ctx = NULL;
     fdn->events = 0;
-
     ev->fdarray[fd] = fdn;
 
     return 0;
@@ -121,7 +122,6 @@ int fdevent_event_del(fdevents *ev, int *fde_ndx, int fd) {
 
 int fdevent_event_set(fdevents *ev, int* fde_ndx, int fd, int events) {
     int fde = fde_ndx ? *fde_ndx : -1;
-
     if(ev->event_set) fde = ev->event_set(ev, fde, fd, events);
     ev->fdarray[fd]->events = events;
 
@@ -137,7 +137,7 @@ int fdevent_poll(fdevents *ev, int timeout_ms) {
 
 int fdevent_event_get_revent(fdevents *ev, size_t ndx) {
     if (ev->event_get_revent == NULL) SEGFAULT();
-    return ev->event_get_revent(); 
+    return ev->event_get_revent(ev, ndx); 
 }
 
 int fdevent_event_get_fd(fdevents *ev, size_t ndx) {

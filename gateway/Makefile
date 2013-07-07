@@ -1,13 +1,15 @@
 include ../Make.defines
 
-OBJS = ../event/*.o
+OBJS = gateway.o engine.o server.o engine_manager.o acceptor.o \
+		fdevent.o fdevent_linux_sysepoll.o epoll.o
+# OBJS = ../event/*.o
 
 PROGS =	gateway
 
 all:	${PROGS}
 
-gateway:	gateway.o engine.o server.o engine_manager.o acceptor.o
-		${CC} ${CFLAGS} -o $@ gateway.o engine.o server.o engine_manager.o acceptor.o ${LIBS}
+gateway:	${OBJS}
+		${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBS}
 
 clean:
-		rm -f ${PROGS} ${CLEANFILES}
+		rm -f ${OBJS}

@@ -1,7 +1,9 @@
 #ifndef _FDEVENT_H_
 #define _FDEVENT_H_
 
-#include <sys/epoll.h>
+#include "global.h"
+
+#define BV(x) (1 << x)
 
 #define FDEVENT_IN     BV(0)
 #define FDEVENT_PRI    BV(1)
@@ -10,7 +12,10 @@
 #define FDEVENT_HUP    BV(4)
 #define FDEVENT_NVAL   BV(5)
 
-typedef enum { HANDLER_UNSET,
+#define SEGFAULT() do { fprintf(stderr, "%s.%d: aborted\n", __FILE__, __LINE__); abort(); } while(0)
+
+typedef enum { 
+		HANDLER_UNSET,
 		HANDLER_GO_ON,
 		HANDLER_FINISHED,
 		HANDLER_COMEBACK,
@@ -28,10 +33,12 @@ typedef enum {
     FDEVENT_HANDLER_LINUX_SYSEPOLL,     //sysepoll
     FDEVENT_HANDLER_SOLARIS_DEVPOLL,     //devpoll
     FDEVENT_HANDLER_FREEBSD_KQUEUE,     //kqueue
-    FDEVENT_HANDLER_SOLARIS_PORT         //port
+    FDEVENT_HANDLER_SOLARIS_PORT,        //port
+    FDEVENT_HANDLER_LIBEV
 } fdevent_handler_t;
 
-typedef handler_t (*fdevent_handler)(int revents);
+//
+typedef handler_t (*fdevent_handler)(void * e, int revents, int fd);
 
 typedef struct _fdnode {
      fdevent_handler handler; //处理函数指针
@@ -46,13 +53,12 @@ typedef struct fdevents {
 	fdnode **fdarray;   //文件描述符数组
 	size_t maxfds;      //最大的文件描述符数
 
-	#ifdef USE_LINUX_EPOLL
-		int epoll_fd;  //epoll_create返回的描述符
-		struct epoll_event *epoll_events;  //保存fd及对应的事件
-	#endif
+	int epoll_fd;  //epoll_create返回的描述符
+	struct epoll_event *epoll_events;  //保存fd及对应的事件
 
 	int (*reset) (struct fdevents * ev);
 	void (*free) (struct fdevents * ev);
+	int (*event_set)(struct fdevents *ev, int fde_ndx, int fd, int events);
 	int (*event_add) (struct fdevents *ev, int fde_ndx, int fd, int events);
 	int (*event_del) (struct fdevents *ev, int fde_ndx, int fd);
 	int (*event_get_revent) (struct fdevents *ev, size_t ndx);
@@ -63,13 +69,16 @@ typedef struct fdevents {
 
 }fdevents;
 
-fdevents *fdevent_init(size_t maxfds, fdevent_handler_t type);
+
+fdevents * fdevent_init(size_t maxfds, fdevent_handler_t type);
 
 /*
 * 重置和释放fdevent系统。
 */
 int fdevent_reset(fdevents * ev);
 void fdevent_free(fdevents * ev);
+
+int fdevent_event_set(fdevents *ev, int *fde_ndx, int fd, int events); /* events can be FDEVENT_IN, FDEVENT_OUT or FDEVENT_IN | FDEVENT_OUT */
 
 /*
 * 将fd增加到fd event系统中。events是要对fd要监听的事件。

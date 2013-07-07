@@ -16,12 +16,15 @@
 */
 #include "engine.h"
 #include "server.h"
+#include "fdevent.h"
+#include "epoll.h"
 
 #include <stdlib.h>
 #include <assert.h>
 
 engine_t * create_engine() {
-    engine_t * e = (engine_t *)malloc(sizeof(engine_t *));
+    engine_t * e;
+    e = (engine_t *)malloc(sizeof(*e));
     if (e) {
         init_engine(e);
     }
@@ -29,7 +32,12 @@ engine_t * create_engine() {
 }
 
 void start_engine(engine_t * e) {
-    e->engine_server_start(); //启动服务器
+    fdevents * events = (fdevents *)malloc(sizeof(*events));
+    events = e->engine_fdevent_init(1024, FDEVENT_HANDLER_LINUX_SYSEPOLL); //初始化epoll
+    e->_fdevents = events;
+    printf("%d\n",e->_fdevents->epoll_fd);
+    e->engine_server_work(e); //启动服务器
+    e->engine_epoll_loop(e); //epoll循环检测事件
 }
 
 void free_engine(engine_t * e) {
@@ -38,6 +46,8 @@ void free_engine(engine_t * e) {
 }
 
 engine_t * init_engine(engine_t * e) {
-    e->engine_server_start = start_server;
+    e->engine_server_work = server_work;
+    e->engine_fdevent_init = fdevent_init;
+    e->engine_epoll_loop = epoll_loop;
     return e;
 }

@@ -16,18 +16,30 @@
 */
 #include "acceptor.h"
 #include "server.h"
-#include "global.h"
 
 void create_acceptor() {
 
 }
 
-void add_listener(const char * ip, uint32_t port) {
+void add_listener(engine_t * e, const char * ip, uint32_t port) {
     struct sockaddr_in serveraddr;
    // int socketfd;
-    tcp_listen(ip, port, &serveraddr, 256);
+    tcp_listen(e, ip, port, &serveraddr, 256);
 }
 
-void acceptor_run() {
-
+handler_t acceptor_run(void * e, int revents, int fd) {
+    struct sockaddr_in client_address;
+    socklen_t len = sizeof(struct sockaddr_in); 
+    int nfd;
+    if (revents & FDEVENT_IN) {
+        if((nfd = accept(fd, (struct sockaddr*)&client_address, &len)) == -1) {  
+            if(errno != EAGAIN && errno != EINTR) {  
+                printf("%s: bad accept\n", __func__);  
+            }  
+            printf("%s\n",strerror(errno));
+            printf("%d\n",nfd);
+            return HANDLER_GO_ON;  
+        }  
+    }
+    return HANDLER_GO_ON;
 }

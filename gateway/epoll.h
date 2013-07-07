@@ -15,27 +15,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef _ENGINE_H
-#define _ENGINE_H
+#ifndef _EPOLL_H
+#define _EPOLL_H
 
-#include "fdevent.h"
+#include "engine.h"
 
-#define INVALID_ENGINE NULL
-
-typedef struct engine {
-	fdevents * _fdevents;
-	void  (*engine_server_work)(); //游戏引擎初始化
-    fdevents * (*engine_fdevent_init)();
-	void (*engine_epoll_loop)(); //游戏引擎循环
-    void (*engine_fdevent_free)();
-	//void (*engine_fdevents_register)();
-	//void (*engine_fdevents_unregister)();
-}engine_t;
-
-engine_t * create_engine();
-void	free_engine(engine_t * e);
-engine_t *	init_engine(engine_t * e);
-void	start_engine(engine_t * e);
+#define MAX_EVENTS 1024
+    
+//epoll事件循环
+void    epoll_loop(engine_t * e);
 
 #endif
 

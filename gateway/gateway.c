@@ -35,6 +35,6 @@ int main() {
     engine_t * engine;
     engine = new_engine();
     start_engine(engine);
-    printf("%s\n","ok---------------");
+    //printf("%s\n","ok---------------");
     return 0;
 }
