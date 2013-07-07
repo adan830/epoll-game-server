@@ -40,12 +40,22 @@ int32_t Bind(int32_t sockfd, const struct sockaddr *myaddr, socklen_t addrlen)  
     return 0;
 }
 
-int32_t Listen(int32_t sockfd,int32_t backlog)  {
+int32_t Listen(int32_t sockfd, int32_t backlog)  {
     if( listen(sockfd, backlog) < 0 ) {
             printf("%s\n",strerror(errno));
             return -1;
         }
     return 0;
+}
+
+int Accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len) {
+    int32_t nfd;
+    if ( (nfd = accept(sockfd, sa, len)) < 0 ) {
+        if(errno != EAGAIN && errno != EINTR) {  
+            //日志打印
+        }   
+    }
+    return nfd;
 }
 
 void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog) {

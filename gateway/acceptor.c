@@ -32,7 +32,7 @@ handler_t acceptor_run(void * e, int revents, int fd) {
     socklen_t len = sizeof(struct sockaddr_in); 
     int nfd;
     if (revents & FDEVENT_IN) {
-        if((nfd = accept(fd, (struct sockaddr*)&client_address, &len)) == -1) {  
+        if((nfd = Accept(fd, (struct sockaddr*)&client_address, &len)) == -1) {  
             if(errno != EAGAIN && errno != EINTR) {  
                 printf("%s: bad accept\n", __func__);  
             }  
