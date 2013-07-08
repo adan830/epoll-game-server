@@ -14,8 +14,8 @@ struct Head
 // };
 int main(int argc, char *argv[])
 {
-    int sockfd, numbytes;
-    char buf[MAXDATASIZE];
+    int sockfd;
+    // char buf[MAXDATASIZE];
     struct hostent *he;
     struct sockaddr_in their_addr; // connector'saddress information
  
@@ -42,12 +42,14 @@ int main(int argc, char *argv[])
     //their_addr.sin_addr = *(struct in_addr *)(*(he->h_addr_list));
     their_addr.sin_addr = *((struct in_addr *)he->h_addr);
    // memset(their_addr.sin_zero, '', sizeof(their_addr.sin_zero));
- 
-    if (connect(sockfd, (struct sockaddr *)&their_addr, sizeof their_addr) == -1) 
+    int status;
+    if ( (status = connect(sockfd, (struct sockaddr *)&their_addr, sizeof their_addr)) == -1) 
     {
+        printf("status=%d\n",status);
         perror("connect");
         exit(1);
     }
+    printf("--------------status=%d\n",status);
    //  struct Head head;
    // // struct Message message = (struct Message*)malloc(sizeof(struct Message));
    //  char *data = "111";
@@ -55,48 +57,49 @@ int main(int argc, char *argv[])
    //  head.cmd = 1;
     //message.head = head;
     //message.data = data;
-    int i;
+    // int i;
     char *str = "abcd";
-    char *str1 = "er";
-    i = 6;
+    // char *str1 = "er";
+    // i = 6;
+   send(sockfd, str, strlen(str), 0 );
     while( 1 )
     {
-       // send(sockfd, &i, sizeof(i), 0 );
-        printf("----------------------------%d\n",send(sockfd, &i, sizeof(i), 0 ));
-       // send(sockfd, str, strlen(str), 0 );
-        printf("----------------------------%d\n",send(sockfd, str, strlen(str), 0 ));
-         printf("----------------------------%d\n",send(sockfd, str1, strlen(str1), 0 ));
-        // if(send(sockfd, &i, sizeof(i), 0 ) == -1)
-        // {
-        //     printf("come in-------111111111");
-        //     perror("send");
-        // }
-        // if(send(sockfd, str, strlen(str), 0 ) == -1)
-        // {
-        //     printf("come in-------111111111");
-        //     perror("send");
-        // }
-        // printf("%s\n",data);
-        // if(send(sockfd, data, strlen(data), 0 ) == -1)
-        // {
-        //             printf("come in-------111111111");
-        //             perror("send");
-        // }
-        printf("come in-------2222222222");
-        if ((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1)
-        {
-            perror("recv");
-        }
-        else if( numbytes == 0 )
-        {
-            printf("Remote server has shutdown!\n");
-            break;
-        }
+       // // send(sockfd, &i, sizeof(i), 0 );
+       //  printf("----------------------------%d\n",send(sockfd, &i, sizeof(i), 0 ));
+        // send(sockfd, str, strlen(str), 0 );
+       //  printf("----------------------------%d\n",send(sockfd, str, strlen(str), 0 ));
+       //   printf("----------------------------%d\n",send(sockfd, str1, strlen(str1), 0 ));
+       //  // if(send(sockfd, &i, sizeof(i), 0 ) == -1)
+       //  // {
+       //  //     printf("come in-------111111111");
+       //  //     perror("send");
+       //  // }
+       //  // if(send(sockfd, str, strlen(str), 0 ) == -1)
+       //  // {
+       //  //     printf("come in-------111111111");
+       //  //     perror("send");
+       //  // }
+       //  // printf("%s\n",data);
+       //  // if(send(sockfd, data, strlen(data), 0 ) == -1)
+       //  // {
+       //  //             printf("come in-------111111111");
+       //  //             perror("send");
+       //  // }
+       //  printf("come in-------2222222222");
+       //  if ((numbytes = recv(sockfd, buf, MAXDATASIZE-1, 0)) == -1)
+       //  {
+       //      perror("recv");
+       //  }
+       //  else if( numbytes == 0 )
+       //  {
+       //      printf("Remote server has shutdown!\n");
+       //      break;
+       //  }
  
-        buf[numbytes] = '\0';
+       //  buf[numbytes] = '\0';
  
-        printf("Received: %s \n",buf);
-        sleep(1);
+       //  printf("Received: %s \n",buf);
+       //  sleep(1);
     }
  
     close(sockfd);

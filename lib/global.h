@@ -1,7 +1,6 @@
-#include "global.h"
-
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -24,10 +23,10 @@
 *level表示打印日志的等级
 *buf表示存放数据
 */
-typedef struct{
-        int level;
-        char *buf;
-}log_unit_data;
+// typedef struct{
+//         int level;
+//         char *buf;
+// }log_unit_data;
 
 void     err_sys(const char *, ...);
 void     err_dump(const char *, ...);
