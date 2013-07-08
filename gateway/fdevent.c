@@ -147,6 +147,7 @@ int fdevent_event_get_fd(fdevents *ev, size_t ndx) {
 }
 
 fdevent_handler fdevent_get_handler(fdevents *ev, int fd) {
+    printf("&&&&&&&&&&&&&&&&&&fd=-----------------%d\n",fd);
     if (ev->fdarray[fd] == NULL) SEGFAULT();
     if (ev->fdarray[fd]->fd != fd) SEGFAULT();
 

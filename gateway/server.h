@@ -10,6 +10,7 @@ int32_t 	open_socket(int32_t family, int32_t type, int32_t protocol);
 int32_t	Bind(int32_t fd, struct sockaddr_in * servaddr, socklen_t addrlen);
 int32_t	Listen(int32_t fd, int32_t backlog);
 int32_t Accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len);
+handler_t	recv_data(void * e, int revents, int fd);
 
 #endif
 

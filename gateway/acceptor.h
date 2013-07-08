@@ -7,7 +7,7 @@
 
 void	create_acceptor();
 void	add_listener(engine_t * e, const char * ip, uint32_t port);
-handler_t	acceptor_run(void * e, int events, int fd);
+handler_t 	acceptor_run(void * e, int revents, int fd);
 
 
 #endif

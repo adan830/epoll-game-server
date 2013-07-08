@@ -30,16 +30,21 @@ void add_listener(engine_t * e, const char * ip, uint32_t port) {
 handler_t acceptor_run(void * e, int revents, int fd) {
     struct sockaddr_in client_address;
     socklen_t len = sizeof(struct sockaddr_in); 
-    int nfd;
+    int nfd = -1;
     if (revents & FDEVENT_IN) {
         if((nfd = Accept(fd, (struct sockaddr*)&client_address, &len)) == -1) {  
             if(errno != EAGAIN && errno != EINTR) {  
                 printf("%s: bad accept\n", __func__);  
             }  
-            printf("%s\n",strerror(errno));
-            printf("%d\n",nfd);
             return HANDLER_GO_ON;  
         }  
     }
+    printf("***********8nfd************=%d\n",nfd);
+    int tmp = -1;
+    // //给listenfd注册事件
+
+    fdevent_register(((engine_t *)e)->_fdevents, nfd, recv_data, (engine_t *)e);
+    fdevent_event_set(((engine_t *)e)->_fdevents, &tmp, nfd, FDEVENT_IN);
+
     return HANDLER_GO_ON;
 }

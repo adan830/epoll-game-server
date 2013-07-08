@@ -63,10 +63,10 @@ void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in
     listenfd = open_socket(AF_INET, SOCK_STREAM, 0);
 
     int tmp = -1;
-    //给sockfd注册事件
+    //给listenfd注册事件
     fdevent_register(e->_fdevents, listenfd, acceptor_run, e);
     fdevent_event_set(e->_fdevents, &tmp, listenfd, FDEVENT_IN);
-    printf("listenfd=%d\n",listenfd);
+
     if (listenfd) {
         //日志打印
     }
@@ -84,7 +84,7 @@ void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in
         servaddr->sin_addr.s_addr = htonl(INADDR_ANY);
     }
     servaddr->sin_port = htons(port);
-    printf("port = %d\n",port);
+
     if (Bind(listenfd, (const struct sockaddr*)servaddr, sizeof(*servaddr)) < 0) {
         //日志打印
         printf("%s\n",strerror(errno));
@@ -93,17 +93,10 @@ void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in
     if (Listen(listenfd, backlog) == 0) {
         printf("%s\n","server listen successful!");
     }
-    // struct sockaddr_in sin;  
-    // socklen_t len = sizeof(struct sockaddr_in);  
-    // int nfd;
-    // while(1) {
-    //     printf("listenfd=%d\n",listenfd);
-    // if((nfd = accept(listenfd, (struct sockaddr*)&sin, &len)) == -1) {
-    //         if(errno != EAGAIN && errno != EINTR) {  
-    //             printf("%s: bad accept\n", __func__);  
-    //         }  
-    //         printf("%s\n",strerror(errno));
-    //         printf("%d\n",nfd);
-    //     }  
-    // }
+}
+
+handler_t  recv_data(void * e, int revents, int fd) {
+    // recv(fd, buff, sizeof(buff) - 1, 0);
+    //TODO 开始接收数据了
+    return HANDLER_GO_ON;
 }
