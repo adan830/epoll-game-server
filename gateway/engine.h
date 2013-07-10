@@ -25,7 +25,7 @@
 typedef struct engine {
 	fdevents * _fdevents;
 	void  (*engine_server_work)(); //游戏引擎初始化
-    fdevents * (*engine_fdevent_init)();
+    fdevents * (*engine_fdevent_init)(); //游戏网关事件的初始化
 	void (*engine_epoll_loop)(); //游戏引擎循环
     void (*engine_fdevent_free)();
 	//void (*engine_fdevents_register)();
@@ -38,6 +38,3 @@ engine_t *	init_engine(engine_t * e);
 void	start_engine(engine_t * e);
 
 #endif
-
-
-
