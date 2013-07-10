@@ -30,7 +30,7 @@ typedef struct packet
     char *p_pack; //包数据
     //void (*Init)(packet *dt, int32_t fd);
     void (*init)(struct packet * dt, int32_t fd);
-    void  (*read_hard)(struct packet *dt, char *pack, uint32_t *index);
+    void (*read_hard)(struct packet *dt, char *pack, uint32_t *index);
     void (*read_pack)(struct packet *dt, char *pack, uint32_t *index);
     void (*read)(struct packet *dt, char *pack);
 }packet;

@@ -49,7 +49,7 @@ void packet_read_hard(packet *dt, char *pack, uint32_t *index)
     {
         dt->max_packet_len = dt->pack_head_len; 
         dt->p_pack = (char *)malloc(sizeof(char) * dt->max_packet_len);
-        dt->pack_index = 0;
+        dt->packet_index = 0;
         dt->head_index ++;
     }
 }
@@ -57,9 +57,9 @@ void packet_read_hard(packet *dt, char *pack, uint32_t *index)
 void packet_read_pack(packet *dt, char *pack, uint32_t *index)
 {
     uint32_t len = strlen(pack);
-    if ((*index) < len && dt->pack_index < dt->max_packet_len) {
+    if ((*index) < len && dt->packet_index < dt->max_packet_len) {
         uint32_t len1 = len - (*index); //收到包剩余的数据长度
-        uint32_t len2 = dt->max_packet_len - dt->pack_index; //剩余需要填充的包数据
+        uint32_t len2 = dt->max_packet_len - dt->packet_index; //剩余需要填充的包数据
         uint32_t end_index = 0;
         if (len1 > len2) {
             end_index = len2 + (*index);
@@ -68,7 +68,7 @@ void packet_read_pack(packet *dt, char *pack, uint32_t *index)
             end_index = len1 + (*index);
         }
         //copy pack
-        packet_copy(dt, pack, index, end_index)
+        packet_copy(dt, pack, index, end_index);
     }
 }
 
@@ -80,8 +80,8 @@ void packet_read(packet *dt, char *pack)
     while(index < len) {
         dt->read_hard(dt, pack, &index);
         dt->read_pack(dt, pack, &index);
-        if (dt->pack_index == dt->max_packet_len
-            && dt->pack_index != 0) {
+        if (dt->packet_index == dt->max_packet_len
+            && dt->packet_index != 0) {
            //单个包读完写到buf里面
         }
     }
@@ -89,8 +89,9 @@ void packet_read(packet *dt, char *pack)
 
 void packet_copy(packet *dt, char * pack, uint32_t *start_index, uint32_t end_index)
 {
-    for (uint32_t i = (*start_index); i < end_index; i ++)
+    uint32_t i = (*start_index);
+    for ( ; i < end_index; i ++)
     {
-        dt->p_pack[dt->pack_index ++] = pack[i];
+        dt->p_pack[dt->packet_index ++] = pack[i];
     }
 }
