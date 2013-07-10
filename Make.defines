@@ -9,7 +9,7 @@
 # System = i686-pc-linux-gnu
 
 CC = gcc
-CFLAGS = -I../lib -I../event -g -O2 -D_REENTRANT -Wall
+CFLAGS = -I../lib -I../structures -g -O2 -D_REENTRANT -Wall
 LIBS = ../libglobal.a -lpthread
 LIBS_XTI =  ../libglobal.a -lpthread
 RANLIB = ranlib
