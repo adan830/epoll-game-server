@@ -12,6 +12,8 @@
 #define FDEVENT_HUP    BV(4)
 #define FDEVENT_NVAL   BV(5)
 
+typedef handler_t (*fdevent_handler)(int revents);
+
 //定义系统使用的并发模型,方便以后做移植
 typedef enum {
     FDEVENT_HANDLER_UNSET,                 //未定义

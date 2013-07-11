@@ -7,7 +7,7 @@ static void fdevent_linux_sysepoll_free(fdevents *ev) {
 }
 
 //linux平台epoll的初始化
-int fdevent_linux_sysepoll_init(fdevent *ev) {
+int fdevent_linux_sysepoll_init(fdevents *ev) {
 	ev->type = FDEVENT_HANDLER_LINUX_SYSEPOLL;
 #define SET(x) \
 	ev->x = fdevent_linux_sysepoll_##x;
