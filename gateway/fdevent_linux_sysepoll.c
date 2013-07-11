@@ -42,9 +42,6 @@ static int fdevent_linux_sysepoll_event_set(fdevents *ev, int fde_ndx, int fd, i
 
 	ep.data.ptr = NULL;
 	ep.data.fd = fd;
-	printf("---------------ep.events=%d\n",ep.events);
-	printf("---------------add=%d\n",add);
-	printf("---------------fd=%d\n",fd);
 	if (0 != epoll_ctl(ev->epoll_fd, add ? EPOLL_CTL_ADD : EPOLL_CTL_MOD, fd, &ep)) {
 		// log_error_write(ev->srv, __FILE__, __LINE__, "SSS",
 		// 	"epoll_ctl failed: ", strerror(errno), ", dying");

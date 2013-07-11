@@ -15,24 +15,29 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "global.h"
-#include "fdevent.h"
+#include "server.h"
 #include "epoll.h"
-#include "engine.h"
 
 void epoll_loop(engine_t * e) {
     int n;
     while (1) {
+        while(!double_link_list_empty(e->socket_actived_list)) {
+            socket_t * st = (socket_t *)double_link_list_pop(e->socket_actived_list);
+            fdevent_handler handler = fdevent_get_handler(e->_fdevents, st->fd);
+            (*handler)(e, st);
+        }
         if ( (n = fdevent_poll(e->_fdevents, 1000)) > 0) {
             int fd_ndx = -1;
             for(; fd_ndx < n; fd_ndx++) {
-                fdevent_handler handler;
-                fd_ndx  = fdevent_event_next_fdndx (e->_fdevents, fd_ndx);
+                fd_ndx  = fdevent_event_next_fdndx(e->_fdevents, fd_ndx);
                 if (fd_ndx == -1) break;
                 int events = fdevent_event_get_revent(e->_fdevents, fd_ndx);
                 int fd = fdevent_event_get_fd(e->_fdevents, fd_ndx);
-                handler = fdevent_get_handler(e->_fdevents, fd);
-                (*handler)(e, events, fd);
+                if (events & FDEVENT_IN) {
+                    socket_t * st = fdevent_get_context(e->_fdevents, fd);
+                    st->status |= 0x0001;
+                    double_link_list_push(e->socket_actived_list, (struct double_link_node *)st);
+                }
             }
         }
     }

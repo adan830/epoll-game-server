@@ -15,33 +15,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "server.h"
 #include "acceptor.h"
-#include "engine.h"
 
 void server_work(engine_t * e) {
     create_acceptor();
     add_listener(e, "127.0.0.1", 1234);
-   // acceptor_run();
 }
 
-int32_t open_socket(int32_t family, int32_t type, int32_t protocol) {
+socket_t * open_socket(int32_t family, int32_t type, int32_t protocol) {
     int32_t sockfd;
     if ( (sockfd = socket(family, type, protocol)) < 0 ) {
         //日志打印
     }
-    // socket_t = init_socket()
-    return sockfd;
+    socket_t * st = init_socket(sockfd);
+    if (st == NULL) {
+        close(sockfd);
+        return NULL;
+    }
+    return st;
 }
 
-int32_t Bind(int32_t sockfd, const struct sockaddr *myaddr, socklen_t addrlen)  {
-    if ( bind(sockfd, myaddr, addrlen) < 0 ) {
-            printf("%s\n",strerror(errno));
-            return -1;
-        }
-    return 0;
+socket_t * init_socket(int32_t sockfd) {
+    socket_t * st = (socket_t *)malloc(sizeof(* st));
+    if (st) {
+        st->status = 0x0000;
+        st->fd = sockfd;
+        st->fdx = -1;
+        st->pending_send = create_link_list();
+        st->pending_recv = create_link_list();
+        link_list_clear(st->pending_send);
+        link_list_clear(st->pending_recv);
+    }
+    return st;
 }
 
-int32_t Listen(int32_t sockfd, int32_t backlog)  {
+int32_t socket_listen(int32_t sockfd, int32_t backlog)  {
     if( listen(sockfd, backlog) < 0 ) {
             printf("%s\n",strerror(errno));
             return -1;
@@ -49,7 +58,7 @@ int32_t Listen(int32_t sockfd, int32_t backlog)  {
     return 0;
 }
 
-int Accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len) {
+int socket_accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len) {
     int32_t nfd;
     if ( (nfd = accept(sockfd, sa, len)) < 0 ) {
         if(errno != EAGAIN && errno != EINTR) {  
@@ -60,15 +69,14 @@ int Accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len) {
 }
 
 void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog) {
-    int32_t listenfd;
-    listenfd = open_socket(AF_INET, SOCK_STREAM, 0);
 
-    int tmp = -1;
+    socket_t * st = open_socket(AF_INET, SOCK_STREAM, 0);
+    printf("st->fd = %d\n",st->fd);
     //给listenfd注册事件
-    fdevent_register(e->_fdevents, listenfd, acceptor_run, e);
-    fdevent_event_set(e->_fdevents, &tmp, listenfd, FDEVENT_IN);
+    fdevent_register(e->_fdevents, st->fd, acceptor_run, st);
+    fdevent_event_set(e->_fdevents, &st->fdx, st->fd, FDEVENT_IN);
 
-    if (listenfd) {
+    if (st->fd) {
         //日志打印
     }
 
@@ -86,18 +94,32 @@ void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in
     }
     servaddr->sin_port = htons(port);
 
-    if (Bind(listenfd, (const struct sockaddr*)servaddr, sizeof(*servaddr)) < 0) {
+    if (socket_bind(st->fd, (const struct sockaddr *)servaddr, sizeof(*servaddr)) < 0) {
         //日志打印
         printf("%s\n",strerror(errno));
     }
 
-    if (Listen(listenfd, backlog) == 0) {
+    if (socket_listen(st->fd, backlog) == 0) {
         printf("%s\n","server listen successful!");
     }
 }
 
-handler_t  recv_data(void * e, int revents, int fd) {
-    // recv(fd, buff, sizeof(buff) - 1, 0);
+int32_t socket_bind(int32_t sockfd, const struct sockaddr * myaddr, socklen_t addrlen) {
+    if ( bind(sockfd, myaddr, addrlen) < 0 ) {
+            printf("%s\n",strerror(errno));
+            return -1;
+        }
+    return 0;
+}
+
+handler_t  recv_data(void * e, void * s) {
+    char buff[100];
+    printf("come in ------------ = %s\n",buff);
+    if (((socket_t *)s)->status == 0x0001) { //表示可以接收数据
+        int len = recv(((socket_t *)s)->fd, buff, sizeof(buff) - 1, 0);
+        printf("len=%d\n",len);
+        printf("%s\n",buff);
+    }
     //TODO 开始接收数据了
     return HANDLER_GO_ON;
 }

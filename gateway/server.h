@@ -18,28 +18,30 @@
 #ifndef _SERVER_H
 #define _SERVER_H
 
-#include "global.h"
-#include "fdevent.h"
-#include "double_link_list.h"
+#include "engine.h"
+#include "link_list.h"
 
-typedef struct socket_wrapper
+typedef struct _socket_t
 {
     struct double_link_node dnode;
-    volatile int32_t isactived;
-    volatile int32_t readable;
-    volatile int32_t writeable;
+    int32_t status;
+    // int32_t isactived;
+    // int32_t readable;
+    // int32_t writeable;
     int32_t fd;
-    struct link_list *pending_send; //待发送列表
-    struct link_list *pending_recv; //待接收列表
-}*socket_t;
+    int32_t fdx;
+    link_list * pending_send; //待发送列表
+    link_list * pending_recv; //待接收列表
+}socket_t;
 
 void	server_work();
 void	tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog);
-int32_t 	open_socket(int32_t family, int32_t type, int32_t protocol);
-int32_t	Bind(int32_t fd, struct sockaddr_in * servaddr, socklen_t addrlen);
-int32_t	Listen(int32_t fd, int32_t backlog);
-int32_t Accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len);
-handler_t	recv_data(void * e, int revents, int fd);
+socket_t * 	open_socket(int32_t family, int32_t type, int32_t protocol);
+int32_t	    socket_bind(int32_t fd, const struct sockaddr * servaddr, socklen_t addrlen);
+int32_t	    socket_listen(int32_t fd, int32_t backlog);
+int32_t     socket_accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len);
+handler_t	recv_data(void * e, void * fd);
+socket_t *  init_socket(int32_t sockfd);
 
 #endif
 

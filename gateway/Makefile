@@ -1,7 +1,8 @@
 include ../Make.defines
 
-OBJS = gateway.o engine.o socket.o engine_manager.o acceptor.o \
+OBJS = gateway.o engine.o server.o engine_manager.o acceptor.o \
 		fdevent.o fdevent_linux_sysepoll.o epoll.o packet.o
+
 # OBJS = ../event/*.o
 STRUCTURES = ../structures/*.o
 

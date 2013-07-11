@@ -25,23 +25,23 @@ typedef struct _list_node
     struct _list_node * next;
 }list_node;
 
-struct link_list
+typedef struct _link_list
 {
     int32_t size;
     list_node * head;
     list_node * tail;
-};
+}link_list;
 
-struct link_list * create_link_list();
-void    free_link_list(struct link_list ** list);
-list_node * link_list_head(struct link_list * list);
-list_node * link_list_tail(struct link_list * list);
-void    link_list_contract(struct link_list * to, struct link_list * from);
-void    link_list_clear(struct link_list * list);
-void    link_list_push_tail(struct link_list * list, list_node * node);
-void    link_list_push_front(struct link_list * list, list_node * node);
-list_node * link_list_pop(struct link_list * list);
-int32_t     link_list_is_empty(struct link_list * list);
-int32_t     link_list_size(struct link_list * list);
+link_list * create_link_list();
+void    free_link_list(link_list ** list);
+list_node * link_list_head(link_list * list);
+list_node * link_list_tail(link_list * list);
+void    link_list_contract(link_list * to, link_list * from);
+void    link_list_clear(link_list * list);
+void    link_list_push_tail(link_list * list, list_node * node);
+void    link_list_push_front(link_list * list, list_node * node);
+list_node * link_list_pop(link_list * list);
+int32_t     link_list_is_empty(link_list * list);
+int32_t     link_list_size(link_list * list);
 
 #endif

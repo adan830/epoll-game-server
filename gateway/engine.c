@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "engine.h"
-#include "socket.h"
+#include "server.h"
 #include "fdevent.h"
 #include "epoll.h"
 

@@ -55,7 +55,7 @@ typedef enum {
 } fdevent_handler_t;
 
 //
-typedef handler_t (*fdevent_handler)(void * e, int revents, int fd);
+typedef handler_t (*fdevent_handler)(void * e, void * st);
 
 typedef struct _fdnode {
      fdevent_handler handler; //处理函数指针

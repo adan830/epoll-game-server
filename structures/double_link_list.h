@@ -33,8 +33,8 @@ struct double_link_list
 };
 
 int32_t     double_link_list_empty(struct double_link_list *dl);
-struct      double_link_node *double_link_list_first(struct double_link_list *dl);
-struct      double_link_node *double_link_list_last(struct double_link_list *dl);
+struct      double_link_node * double_link_list_first(struct double_link_list *dl);
+struct      double_link_node * double_link_list_last(struct double_link_list *dl);
 int32_t     double_link_list_remove(struct double_link_node * node);
 struct      double_link_node * double_link_list_pop(struct double_link_list * dl);
 int32_t     double_link_list_push(struct double_link_list * dl, struct double_link_node * ndoe);

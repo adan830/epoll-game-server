@@ -15,13 +15,9 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-// #include "global.h"
-#include "engine_manager.h"
 #include "engine.h"
-#include "fdevent.h"
-
-#include "global.h"
-
+#include "engine_manager.h"
+    
 #define DRIVE_RECV_HEAD 0
 #define DRIVE_RECV_DATA 1
 #define DRIVE_FD_CLOSE 2

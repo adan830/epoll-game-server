@@ -19,25 +19,25 @@
 
 #include <stdio.h>
 
-struct link_list * create_link_list() {
-    struct link_list * list = calloc(1, sizeof(*list));
+link_list * create_link_list() {
+    link_list * list = calloc(1, sizeof(*list));
     return list;
 }
 
-void free_link_list(struct link_list ** list) {
+void free_link_list(link_list ** list) {
     free(*list);
     *list = NULL;
 }
 
-list_node * link_list_head(struct link_list * list) {
+list_node * link_list_head(link_list * list) {
     return list->head;
 }
 
-list_node * link_list_tail(struct link_list * list) {
+list_node * link_list_tail(link_list * list) {
     return list->tail;
 }
 
-void link_list_contract(struct link_list * to, struct link_list * from) {
+void link_list_contract(link_list * to, link_list * from) {
     if (from->head && from->tail) {
         if (to->head && to->tail) {
             to->tail->next = from->head;
@@ -51,12 +51,12 @@ void link_list_contract(struct link_list * to, struct link_list * from) {
     }
 }
 
-void link_list_clear(struct link_list * list) {
+void link_list_clear(link_list * list) {
     list->size = 0;
     list->head = list->tail = NULL;
 }
 
-void link_list_push_tail(struct link_list * list, list_node * node) {
+void link_list_push_tail(link_list * list, list_node * node) {
     if (node->next) {
         return;
     }
@@ -70,7 +70,7 @@ void link_list_push_tail(struct link_list * list, list_node * node) {
     ++list->size;
 }
 
-void link_list_push_front(struct link_list * list, list_node * node) {
+void link_list_push_front(link_list * list, list_node * node) {
     if (node->next) {
         return;
     }
@@ -84,7 +84,7 @@ void link_list_push_front(struct link_list * list, list_node * node) {
     ++list->size;
 }
 
-list_node * link_list_pop(struct link_list * list) {
+list_node * link_list_pop(link_list * list) {
     if (list->size == 0) return NULL;
     list_node * node = list->head;
     list->head = list->head->next;
@@ -96,11 +96,11 @@ list_node * link_list_pop(struct link_list * list) {
     return node;
 }
 
-int32_t link_list_is_empty(struct link_list * list) {
+int32_t link_list_is_empty(link_list * list) {
     return list->size == 0;
 }
 
-int32_t link_list_size(struct link_list * list) {
+int32_t link_list_size(link_list * list) {
     return list->size;
 }
 
