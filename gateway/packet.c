@@ -21,6 +21,7 @@ void packet_create(packet *dt, int32_t fd)
 {
 	dt->init = packet_init;
 	dt->read_hard = packet_read_hard;
+    dt->read_pack = packet_read_pack;
     dt->read = packet_read;
 	dt->init(dt, fd);
 }
@@ -34,11 +35,11 @@ void packet_init(packet *dt, int32_t fd)
     dt->max_packet_len = 0; //最大的数据量
 }
 
-void packet_read_hard(packet *dt, char *pack, uint32_t *index)
+void packet_read_hard(packet *dt, char *pack, uint32_t *index, uint32_t pack_len)
 {
-	uint32_t len = strlen(pack); //计算当前读到数据的长度
+	//uint32_t len = strlen(pack); //计算当前读到数据的长度
     //int pack_index = 0;
-    while(dt->head_index < 4 && (*index) < len) {
+    while(dt->head_index < 4 && (*index) < pack_len) {
         dt->pack_head_len = (dt->pack_head_len << 8) + pack[(*index)];
         dt->head_index ++;
         (*index) ++;
@@ -54,11 +55,11 @@ void packet_read_hard(packet *dt, char *pack, uint32_t *index)
     }
 }
 
-void packet_read_pack(packet *dt, char *pack, uint32_t *index)
+void packet_read_pack(packet *dt, char *pack, uint32_t *index, uint32_t pack_len)
 {
-    uint32_t len = strlen(pack);
-    if ((*index) < len && dt->packet_index < dt->max_packet_len) {
-        uint32_t len1 = len - (*index); //收到包剩余的数据长度
+    //uint32_t len = strlen(pack);
+    if ((*index) < pack_len && dt->packet_index < dt->max_packet_len) {
+        uint32_t len1 = pack_len - (*index); //收到包剩余的数据长度
         uint32_t len2 = dt->max_packet_len - dt->packet_index; //剩余需要填充的包数据
         uint32_t end_index = 0;
         if (len1 > len2) {
@@ -69,20 +70,27 @@ void packet_read_pack(packet *dt, char *pack, uint32_t *index)
         }
         //copy pack
         packet_copy(dt, pack, index, end_index);
+        (*index) = end_index;
     }
 }
 
-void packet_read(packet *dt, char *pack)
+void packet_read(packet *dt, char *pack, uint32_t pack_len)
 {
     uint32_t index = 0;
-    uint32_t len = strlen(pack);
+    //uint32_t len = strlen(pack);
     //解决粘包情况
-    while(index < len) {
-        dt->read_hard(dt, pack, &index);
-        dt->read_pack(dt, pack, &index);
+    while(index < pack_len) {
+        dt->read_hard(dt, pack, &index, pack_len);
+        dt->read_pack(dt, pack, &index, pack_len);
         if (dt->packet_index == dt->max_packet_len
             && dt->packet_index != 0) {
-           //单个包读完写到buf里面
+            /*
+            //单个包读完写到buf里面
+            还未完善，发完一个包需对包头重新初始化 
+            */
+            dt->head_index = 0;
+            dt->pack_head_len = 0;
+            dt->packet_index = 0;
         }
     }
 }

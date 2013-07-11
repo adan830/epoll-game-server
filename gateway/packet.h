@@ -30,16 +30,22 @@ typedef struct packet
     char *p_pack; //包数据
     //void (*Init)(packet *dt, int32_t fd);
     void (*init)(struct packet * dt, int32_t fd);
-    void (*read_hard)(struct packet *dt, char *pack, uint32_t *index);
-    void (*read_pack)(struct packet *dt, char *pack, uint32_t *index);
-    void (*read)(struct packet *dt, char *pack);
+    void (*read_hard)(struct packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+    void (*read_pack)(struct packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+    void (*read)(struct packet *dt, char *pack, uint32_t pack_len);
 }packet;
 
+//创建一个packet, 指针函数的初始化
 void packet_create(packet *dt, int32_t fd);
+//初始化packet
 void packet_init(packet *dt, int32_t fd);
-void packet_read_hard(packet *dt, char *pack, uint32_t *index);
-void packet_read_pack(packet *dt, char *pack, uint32_t *index);
-void packet_read(packet *dt, char *pack);
-void packet_copy(packet *dt, char * pack, uint32_t *start_index, uint32_t end_index);
+//读取包头
+void packet_read_hard(packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+//读取包的数据
+void packet_read_pack(packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+//读取包
+void packet_read(packet *dt, char *pack, uint32_t pack_len);
+//复制包的内容到结构体
+void packet_copy(packet *dt, char *pack, uint32_t *start_index, uint32_t end_index);
 
 #endif
