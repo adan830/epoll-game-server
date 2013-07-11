@@ -1,12 +1,12 @@
 include ../Make.defines
 
-OBJS = link_list.o
+OBJS = link_list.o double_link_list.o
 
-PROGS =	link_list
+PROGS =	structures
 
 all:	${PROGS}
 
-link_list:	${OBJS}
+structures:	${OBJS}
 		# ${CC} ${CFLAGS} -o $@ ${OBJS} ${LIBS}
 
 clean:
