@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "acceptor.h"
-#include "server.h"
+#include "socket.h"
 
 void create_acceptor() {
 

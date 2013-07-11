@@ -20,6 +20,18 @@
 
 #include "global.h"
 #include "fdevent.h"
+#include "double_link_list.h"
+
+typedef struct socket_wrapper
+{
+    struct double_link_node dnode;
+    volatile int32_t isactived;
+    volatile int32_t readable;
+    volatile int32_t writeable;
+    int32_t fd;
+    struct link_list *pending_send; //待发送列表
+    struct link_list *pending_recv; //待接收列表
+}*socket_t;
 
 void	server_work();
 void	tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog);

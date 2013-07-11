@@ -19,11 +19,13 @@
 #define _ENGINE_H
 
 #include "fdevent.h"
+#include "double_link_list.h"
 
 #define INVALID_ENGINE NULL
 
 typedef struct engine {
 	fdevents * _fdevents;
+    struct double_link_list * socket_actived_list;
 	void  (*engine_server_work)(); //游戏引擎初始化
     fdevents * (*engine_fdevent_init)(); //游戏网关事件的初始化
 	void (*engine_epoll_loop)(); //游戏引擎循环

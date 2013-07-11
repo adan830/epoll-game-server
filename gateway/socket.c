@@ -29,6 +29,7 @@ int32_t open_socket(int32_t family, int32_t type, int32_t protocol) {
     if ( (sockfd = socket(family, type, protocol)) < 0 ) {
         //日志打印
     }
+    // socket_t = init_socket()
     return sockfd;
 }
 

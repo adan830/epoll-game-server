@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "engine.h"
-#include "server.h"
+#include "socket.h"
 #include "fdevent.h"
 #include "epoll.h"
 
@@ -48,5 +48,7 @@ engine_t * init_engine(engine_t * e) {
     e->engine_server_work = server_work;
     e->engine_fdevent_init = fdevent_init;
     e->engine_epoll_loop = epoll_loop;
+    e->socket_actived_list = (struct double_link_list *)calloc(1,sizeof(*e->socket_actived_list));
+    double_link_list_init(e->socket_actived_list); //初始存放活动中的socket_t
     return e;
 }
