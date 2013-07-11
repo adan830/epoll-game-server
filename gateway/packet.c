@@ -46,8 +46,7 @@ void packet_read_hard(packet *dt, char *pack, uint32_t *index, uint32_t pack_len
     }
 
     //读完包头
-    if (dt->head_index == 4)
-    {
+    if (dt->head_index == 4) {
         dt->max_packet_len = dt->pack_head_len; 
         dt->p_pack = (char *)malloc(sizeof(char) * dt->max_packet_len);
         dt->packet_index = 0;

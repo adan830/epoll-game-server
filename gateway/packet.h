@@ -47,5 +47,6 @@ void packet_read_pack(packet *dt, char *pack, uint32_t *index, uint32_t pack_len
 void packet_read(packet *dt, char *pack, uint32_t pack_len);
 //复制包的内容到结构体
 void packet_copy(packet *dt, char *pack, uint32_t *start_index, uint32_t end_index);
-
+// 释放pack??等待完善
+void packet_free();
 #endif
