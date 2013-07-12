@@ -22,6 +22,7 @@
 #include "double_link_list.h"
 
 #define INVALID_ENGINE NULL
+#define MAXFD 1024
 
 typedef struct engine {
 	fdevents * _fdevents;
@@ -38,5 +39,6 @@ engine_t * create_engine();
 void	free_engine(engine_t * e);
 engine_t *	init_engine(engine_t * e);
 void	start_engine(engine_t * e);
+engine_t *  malloc_engine();
 
 #endif

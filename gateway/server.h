@@ -21,6 +21,10 @@
 #include "engine.h"
 #include "link_list.h"
 
+#define IP "127.0.0.1"
+#define PORT 1234
+#define MAXBACKLOG 256
+
 typedef struct _socket_t
 {
     int32_t status;

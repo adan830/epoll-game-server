@@ -20,7 +20,7 @@
 
 void server_work(engine_t * e) {
     create_acceptor();
-    add_listener(e, "127.0.0.1", 1234);
+    add_listener(e, IP, PORT);
 }
 
 socket_t * open_socket(int32_t family, int32_t type, int32_t protocol) {
@@ -71,7 +71,7 @@ int socket_accept(int32_t sockfd, struct sockaddr *sa, socklen_t *len) {
 void tcp_listen(engine_t * e, const char * ip, uint16_t port, struct sockaddr_in *servaddr, int backlog) {
 
     socket_t * st = open_socket(AF_INET, SOCK_STREAM, 0);
-    printf("st->fd = %d\n",st->fd);
+
     //给listenfd注册事件
     fdevent_register(e->_fdevents, st->fd, acceptor_run, st);
     fdevent_event_set(e->_fdevents, &st->fdx, st->fd, FDEVENT_IN);
