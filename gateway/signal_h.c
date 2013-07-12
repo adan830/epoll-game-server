@@ -16,8 +16,22 @@
 */
 
 #include "signal_h.h"
+#include "engine.h"
+
+engine_t * engine;
+
+SigfunC * signal(int signo, SigfunC * func) {
+    struct sigaction act, oact;
+    act.sa_handler = func;
+    sigemptyset(&act.sa_mask);
+    act.sa_flags = 0;
+    if (sigaction(signo, &act, &oact)) {
+        return(SIG_ERR);
+    }
+    return (oact.sa_handler);
+} 
 
 //信号中断回调函数
-void sig_process() {
-
+void sig_process(int signo) {
+    free_engine(engine);
 }

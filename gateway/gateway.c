@@ -26,12 +26,13 @@
 
 #define MAX_EVENTS 500
 
+extern engine_t * engine;
+
 int main() {
 
     signal(SIGINT, sig_process);
     signal(SIGPIPE, sig_process);
 
-    engine_t * engine;
     engine = new_engine();
     start_engine(engine);
     return 0;

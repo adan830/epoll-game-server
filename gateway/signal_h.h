@@ -18,6 +18,8 @@
 #ifndef _SIGNAL_H_H
 #define _SIGNAL_H_H
 
+typedef void SigfunC(int);
+SigfunC *signal(int signo, SigfunC * func);
 void    sig_process();
 
 #endif
