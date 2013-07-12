@@ -35,3 +35,8 @@ SigfunC * signal(int signo, SigfunC * func) {
 void sig_process(int signo) {
     free_engine(engine);
 }
+
+//TODO 套接字断开的信号处理函数
+void sig_close_socket(int signo) {
+
+}
