@@ -20,6 +20,6 @@
 
 typedef void SigfunC(int);
 SigfunC *signal(int signo, SigfunC * func);
-void    sig_process();
+void    sig_free();
 void    sig_close_socket();
 #endif

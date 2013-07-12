@@ -15,8 +15,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "server.h"
 #include "epoll.h"
+#include "server.h"
 
 void epoll_loop(engine_t * e) {
     int n;

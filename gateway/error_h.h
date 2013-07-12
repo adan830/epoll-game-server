@@ -15,28 +15,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "signal_h.h"
-#include "engine.h"
+#ifndef _ERROR_H_H
+#define _ERROR_H_H
 
-engine_t * engine;
+#include "global.h"
 
-SigfunC * signal(int signo, SigfunC * func) {
-    struct sigaction act, oact;
-    act.sa_handler = func;
-    sigemptyset(&act.sa_mask);
-    act.sa_flags = 0;
-    if (sigaction(signo, &act, &oact)) {
-        return(SIG_ERR);
-    }
-    return (oact.sa_handler);
-} 
+void    init_error_buff(int32_t Size);
+void    free_error_buff();
+char *  get_open_socket_error(int32_t error);
+char *  get_recv_socket_error(int error);
 
-//信号中断回调函数
-void sig_free(int signo) {
-    free_engine(engine);
-}
-
-//TODO 套接字断开的信号处理函数
-void sig_close_socket(int signo) {
-
-}
+#endif
