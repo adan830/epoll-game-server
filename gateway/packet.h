@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "link_list.h"
 
 typedef struct packet
 {
@@ -28,25 +29,30 @@ typedef struct packet
     uint32_t packet_index;
     uint32_t max_packet_len; //最大的数据量
     char *p_pack; //包数据
+
+    link_list * pending_send; //待发送列表
+    link_list * pending_recv; //待接收列表
     //void (*Init)(packet *dt, int32_t fd);
-    void (*init)(struct packet * dt, int32_t fd);
-    void (*read_hard)(struct packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
-    void (*read_pack)(struct packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
-    void (*read)(struct packet *dt, char *pack, uint32_t pack_len);
+    void (*init)(struct packet * pt, int32_t fd);
+    void (*read_hard)(struct packet *pt, char *pack, uint32_t *index, uint32_t pack_len);
+    void (*read_pack)(struct packet *pt, char *pack, uint32_t *index, uint32_t pack_len);
+    void (*read)(struct packet *pt, char *pack, uint32_t pack_len);
+    void (*free)(struct packet *pt);
 }packet;
 
 //创建一个packet, 指针函数的初始化
-void packet_create(packet *dt, int32_t fd);
+//void packet_create(packet *pt, int32_t fd);
+packet * packet_create(int32_t fd);
 //初始化packet
-void packet_init(packet *dt, int32_t fd);
+void packet_init(packet *pt, int32_t fd);
 //读取包头
-void packet_read_hard(packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+void packet_read_hard(packet *pt, char *pack, uint32_t *index, uint32_t pack_len);
 //读取包的数据
-void packet_read_pack(packet *dt, char *pack, uint32_t *index, uint32_t pack_len);
+void packet_read_pack(packet *pt, char *pack, uint32_t *index, uint32_t pack_len);
 //读取包
-void packet_read(packet *dt, char *pack, uint32_t pack_len);
+void packet_read(packet *pt, char *pack, uint32_t pack_len);
 //复制包的内容到结构体
-void packet_copy(packet *dt, char *pack, uint32_t *start_index, uint32_t end_index);
+void packet_copy(packet *pt, char *pack, uint32_t *start_index, uint32_t end_index);
 // 释放pack??等待完善
-void packet_free();
+void packet_free(packet *pt);
 #endif

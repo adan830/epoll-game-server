@@ -1,5 +1,5 @@
 /*  
-    Copyright (C) <2013>  <jjchen.lian@gmail.com>
+    Copyright (C) <2013>  <jjchen.lian@gmail.com> <zhanweilong1992@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 #define _SERVER_H
 
 #include "engine.h"
-#include "link_list.h"
+//#include "link_list.h"
+#include "packet.h"
 
 #define IP "127.0.0.1"
 #define PORT 1234
@@ -33,8 +34,9 @@ typedef struct _socket_t
     // int32_t writeable;
     int32_t fd;
     int32_t fdx;
-    link_list * pending_send; //待发送列表
-    link_list * pending_recv; //待接收列表
+    packet * pt;  //用于数据包的处理
+    //link_list * pending_send; //待发送列表
+    //link_list * pending_recv; //待接收列表
 }socket_t;
 
 void	server_work();
