@@ -23,7 +23,6 @@
 
 typedef struct _socket_t
 {
-    struct double_link_node dnode;
     int32_t status;
     // int32_t isactived;
     // int32_t readable;

@@ -41,7 +41,9 @@ void start_engine(engine_t * e) {
 
 void free_engine(engine_t * e) {
     assert(e);
-    free(e);
+    fdevent_free(e->_fdevents); //释放事件结构体
+    free(e->socket_actived_list); //释放socket_t循环链表
+    free(e); //是否engine_t
 }
 
 engine_t * init_engine(engine_t * e) {

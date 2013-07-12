@@ -33,7 +33,7 @@ typedef struct _link_list
 }link_list;
 
 link_list * create_link_list();
-void    free_link_list(link_list ** list);
+void    free_link_list(link_list * list);
 list_node * link_list_head(link_list * list);
 list_node * link_list_tail(link_list * list);
 void    link_list_contract(link_list * to, link_list * from);

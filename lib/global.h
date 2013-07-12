@@ -19,6 +19,10 @@
 #define SERV_PORT 	5000
 #define INFTIM 		1000
 
+#define ISAVTIVE	0x0000
+#define ISWRITE		0x0001
+#define ISREAD		0x0002
+
 /**
 *level表示打印日志的等级
 *buf表示存放数据

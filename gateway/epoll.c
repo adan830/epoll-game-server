@@ -20,9 +20,11 @@
 
 void epoll_loop(engine_t * e) {
     int n;
+
     while (1) {
         while(!double_link_list_empty(e->socket_actived_list)) {
-            socket_t * st = (socket_t *)double_link_list_pop(e->socket_actived_list);
+            struct double_link_node * node = double_link_list_pop(e->socket_actived_list);
+            socket_t * st = (socket_t *)node->data;
             fdevent_handler handler = fdevent_get_handler(e->_fdevents, st->fd);
             (*handler)(e, st);
         }
@@ -35,8 +37,9 @@ void epoll_loop(engine_t * e) {
                 int fd = fdevent_event_get_fd(e->_fdevents, fd_ndx);
                 if (events & FDEVENT_IN) {
                     socket_t * st = fdevent_get_context(e->_fdevents, fd);
-                    st->status |= 0x0001;
-                    double_link_list_push(e->socket_actived_list, (struct double_link_node *)st);
+                    st->status |= ISWRITE;
+                    struct double_link_node * node = create_double_link_node(st);
+                    double_link_list_push(e->socket_actived_list, node);
                 }
             }
         }

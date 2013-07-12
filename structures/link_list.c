@@ -24,9 +24,9 @@ link_list * create_link_list() {
     return list;
 }
 
-void free_link_list(link_list ** list) {
-    free(*list);
-    *list = NULL;
+void free_link_list(link_list *list) {
+    free(list);
+    list = NULL;
 }
 
 list_node * link_list_head(link_list * list) {

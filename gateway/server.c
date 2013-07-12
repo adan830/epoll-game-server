@@ -39,7 +39,7 @@ socket_t * open_socket(int32_t family, int32_t type, int32_t protocol) {
 socket_t * init_socket(int32_t sockfd) {
     socket_t * st = (socket_t *)malloc(sizeof(* st));
     if (st) {
-        st->status = 0x0000;
+        st->status = ISAVTIVE;
         st->fd = sockfd;
         st->fdx = -1;
         st->pending_send = create_link_list();
@@ -115,7 +115,7 @@ int32_t socket_bind(int32_t sockfd, const struct sockaddr * myaddr, socklen_t ad
 handler_t  recv_data(void * e, void * s) {
     char buff[100];
     printf("come in ------------ = %s\n",buff);
-    if (((socket_t *)s)->status == 0x0001) { //表示可以接收数据
+    if (((socket_t *)s)->status == ISWRITE) { //表示可以接收数据
         int len = recv(((socket_t *)s)->fd, buff, sizeof(buff) - 1, 0);
         printf("len=%d\n",len);
         printf("%s\n",buff);
