@@ -69,3 +69,23 @@ void double_link_list_init(struct double_link_list * dl) {
     dl->head.next = &dl->tail;
     dl->tail.pre = &dl->head;
 }
+
+struct double_link_list * create_double_link_list() {
+    struct double_link_list * dl = (struct double_link_list *)malloc(sizeof(*dl));
+    return dl;
+}
+
+void double_link_list_free(struct double_link_list * dl) {
+   while (!double_link_list_empty(dl)) {
+        struct double_link_node * node;
+        node = double_link_list_pop(dl);
+        free(node);
+    }
+    free(dl);
+}
+
+struct double_link_node * create_double_link_node(void * data) {
+    struct double_link_node * node = (struct double_link_node *)malloc(sizeof(*node));
+    node->data = data;
+    return node;
+}

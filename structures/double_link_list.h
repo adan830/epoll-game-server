@@ -22,6 +22,7 @@
 
 struct double_link_node
 {
+    void * data;
     struct double_link_node * pre;
     struct double_link_node * next;
 };
@@ -37,7 +38,9 @@ struct      double_link_node * double_link_list_first(struct double_link_list *d
 struct      double_link_node * double_link_list_last(struct double_link_list *dl);
 int32_t     double_link_list_remove(struct double_link_node * node);
 struct      double_link_node * double_link_list_pop(struct double_link_list * dl);
-int32_t     double_link_list_push(struct double_link_list * dl, struct double_link_node * ndoe);
+int32_t     double_link_list_push(struct double_link_list * dl, struct double_link_node * node);
 void        double_link_list_init(struct double_link_list * dl);
-
+struct      double_link_list * create_double_link_list();
+struct      double_link_node * create_double_link_node(void * data);
+void        double_link_list_free(struct double_link_list * dl);
 #endif
