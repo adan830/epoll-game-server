@@ -11,6 +11,7 @@
 #include <syslog.h>
 #include <time.h>
 #include <netdb.h>
+#include <signal.h>
 
 
 #define MAXLINE         4096    /* max text line length */

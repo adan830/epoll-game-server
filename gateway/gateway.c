@@ -17,6 +17,7 @@
 
 #include "engine.h"
 #include "engine_manager.h"
+#include "signal_h.h"
     
 #define DRIVE_RECV_HEAD 0
 #define DRIVE_RECV_DATA 1
@@ -25,8 +26,10 @@
 
 #define MAX_EVENTS 500
 
-
 int main() {
+
+    signal(SIGINT, sig_process);
+    signal(SIGPIPE, sig_process);
 
     engine_t * engine;
     engine = new_engine();

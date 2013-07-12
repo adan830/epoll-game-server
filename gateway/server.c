@@ -114,11 +114,26 @@ int32_t socket_bind(int32_t sockfd, const struct sockaddr * myaddr, socklen_t ad
 
 handler_t  recv_data(void * e, void * s) {
     char buff[100];
-    printf("come in ------------ = %s\n",buff);
     if (((socket_t *)s)->status == ISWRITE) { //表示可以接收数据
         int len = recv(((socket_t *)s)->fd, buff, sizeof(buff) - 1, 0);
-        printf("len=%d\n",len);
-        printf("%s\n",buff);
+        if (len == 0){
+            //关闭连接
+        }
+        else if (len == -1) {
+            switch (errno){
+                case EAGAIN: break;//套接字定义为非阻塞,而操作采用了阻塞方式,或者定义的超市时间已经大道却没有接收到数据
+                case EBADF: break;//CANSHU 参数s不是合法描述符
+                case ECONNREFUSED: break;//远程主机不允许此操作
+                case EFAULT: break;//接收缓冲区指针在此进程之外
+                case EINTR: break;//接收到中断信号
+                case EINVAL: break;//传递了不合法参数
+                case ENOTCONN: break;//套接字s表示流式套接字,此套接字没有连接
+                case ENOTSOCK: break;//参数不是套接字描述符
+            }
+        }
+        else {
+
+        }
     }
     //TODO 开始接收数据了
     return HANDLER_GO_ON;
