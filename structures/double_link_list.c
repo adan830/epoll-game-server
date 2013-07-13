@@ -79,6 +79,7 @@ void double_link_list_free(struct double_link_list * dl) {
    while (!double_link_list_empty(dl)) {
         struct double_link_node * node;
         node = double_link_list_pop(dl);
+        free(node->data);
         free(node);
     }
     free(dl);

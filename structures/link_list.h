@@ -22,6 +22,7 @@
 
 typedef struct _list_node
 {
+    void * data;
     struct _list_node * next;
 }list_node;
 
@@ -43,5 +44,6 @@ void    link_list_push_front(link_list * list, list_node * node);
 list_node * link_list_pop(link_list * list);
 int32_t     link_list_is_empty(link_list * list);
 int32_t     link_list_size(link_list * list);
-
+list_node * create_link_node(void * data);
+void    free_link_node(list_node * node);
 #endif

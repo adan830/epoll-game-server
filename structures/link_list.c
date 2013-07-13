@@ -25,6 +25,10 @@ link_list * create_link_list() {
 }
 
 void free_link_list(link_list *list) {
+    while (link_list_is_empty(list) == 0) {
+        list_node * node = link_list_pop(list);
+        free_link_node(node);
+    }
     free(list);
     list = NULL;
 }
@@ -104,4 +108,14 @@ int32_t link_list_size(link_list * list) {
     return list->size;
 }
 
+list_node * create_link_node(void * data) {
+    list_node * node = (list_node *)malloc(sizeof(*node));
+    node->data = data;
+    return node;
+}
+
+void free_link_node(list_node * node) {
+    free(node->data);
+    free(node);
+}
 //暂时还未实现可以遍历链表进行回调匹配的实现，后面需要再实现
