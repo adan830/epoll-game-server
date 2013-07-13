@@ -12,7 +12,7 @@
 #include <time.h>
 #include <netdb.h>
 #include <signal.h>
-
+#include <stdbool.h>
 
 #define MAXLINE         4096    /* max text line length */
 #define OPEN_MAX 	100
