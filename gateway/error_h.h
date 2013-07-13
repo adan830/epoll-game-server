@@ -23,6 +23,8 @@
 void    init_error_buff(int32_t Size);
 void    free_error_buff();
 char *  get_open_socket_error(int32_t error);
+char * get_bind_socket_error(int32_t error);
+char * get_listen_socket_error(int32_t error);
 char *  get_recv_socket_error(int error);
 
 #endif
