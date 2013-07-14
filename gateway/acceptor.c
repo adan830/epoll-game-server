@@ -31,8 +31,9 @@ handler_t acceptor_run(void * e, void * s) {
     struct sockaddr_in client_address;
     socklen_t len = sizeof(struct sockaddr_in); 
     int32_t nfd = -1;
-    if (((socket_t *)s)->status == ISWRITE) { //表示处于监听
-        if((nfd = socket_accept(((socket_t *)s)->fd, (struct sockaddr*)&client_address, &len)) == -1) {  
+    socket_t * listen_socket = (socket_t *)s;
+    if (listen_socket->status == ISWRITE) { //表示处于监听
+        if((nfd = socket_accept(listen_socket->fd, (struct sockaddr*)&client_address, &len)) == -1) {  
             if(errno != EAGAIN && errno != EINTR) {  
                 printf("%s: bad accept\n", __func__);  
             }  
@@ -40,7 +41,7 @@ handler_t acceptor_run(void * e, void * s) {
         }  
     }
 
-    ((socket_t *)s)->status = ISAVTIVE;
+    listen_socket->status = ISAVTIVE;
     socket_t * st = init_socket(nfd);
     
     // //给listenfd注册事件

@@ -46,7 +46,7 @@ socket_t * init_socket(int32_t sockfd) {
         //st->pending_recv = create_link_list();
         //link_list_clear(st->pending_send);
         //link_list_clear(st->pending_recv);
-        st->pt = packet_create(st->fd);
+        st->ct = create_connection(st->fd);
     }
     return st;
 }
@@ -114,34 +114,59 @@ int32_t socket_bind(int32_t sockfd, const struct sockaddr * myaddr, socklen_t ad
 }
 
 handler_t  recv_data(void * e, void * s) {
-    char buff[1024]; 
-    //TODO 开始接收数据了
-    while(1){
-        if (((socket_t *)s)->status == ISWRITE) { //表示可以接收数据
-           int len = recv(((socket_t *)s)->fd, buff, sizeof(buff) - 1, 0);
-           if (len == 0){
-                //关闭连接
-                break;
-            }
-            else if (len == -1) {
-                switch (errno){
-                    case EAGAIN: break;//套接字定义为非阻塞,而操作采用了阻塞方式,或者定义的超市时间已经大道却没有接收到数据
-                    case EBADF: break;//CANSHU 参数s不是合法描述符
-                    case ECONNREFUSED: break;//远程主机不允许此操作
-                    case EFAULT: break;//接收缓冲区指针在此进程之外
-                    case EINTR: break;//接收到中断信号
-                    case EINVAL: break;//传递了不合法参数
-                    case ENOTCONN: break;//套接字s表示流式套接字,此套接字没有连接
-                    case ENOTSOCK: break;//参数不是套接字描述符
+    char buff[1024];
+    int32_t index = 0;
+    int32_t len = 0;
+    int32_t offset = 0;
+    socket_t * st = (socket_t *)s;
+    connection * ct = st->ct;
+    if (st->status == ISWRITE) {
+        while (1) {
+            memset(buff, 0, sizeof(buff));
+            len = recv(st->fd, buff, sizeof(buff) - 1, 0);
+            if (len == 0){
+                break; //木有数据了
+            }else if (len == -1) {
+                //出错了
+            }else {
+                while (len > 0) {
+                if (buffer_has_remaining(ct->packet)) {
+                    int32_t remaining = get_buffer_remaining(ct->packet);
+                    if (remaining >= len) {
+                        put_buffers_len(ct->packet, buff, offset, len);
+                        offset = 0;
+                        len = 0;
+                    }else {
+                        put_buffers_len(ct-packet, buff, offset, remaining);
+                        flip_buffer(ct->packet);
+                        //TODO;
+                        clear_buffer(ct->packet);
+                        offset += remaining;
+                        len -= remaining;
+                    }
                 }
-            }
-            else {
-                //void packet_read(packet *pt, char *pack, uint32_t pack_len);
-                (((socket_t *)s)->pt)->read(((socket_t *)s)->pt, buff, (uint32_t)len);
             }
         }
     }
-
-
     return HANDLER_GO_ON;
 }
+
+
+
+//     if (st->status == ISWRITE) {
+//         while(1){
+//             //表示可以接收数据
+//             int len = recv(st->fd, buff, sizeof(buff) - 1, 0);
+//             if (len == 0){ //没有数据
+//                 break;
+//             }
+//             else if (len == -1) { //错误
+//             }
+//             else {
+//                 //void packet_read(packet *pt, char *pack, uint32_t pack_len);
+//                 (st->ct)->read(st->ct, buff, (uint32_t)len);
+//             }
+//         }
+//     }
+//     return HANDLER_GO_ON;
+// }

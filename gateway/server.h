@@ -19,8 +19,7 @@
 #define _SERVER_H
 
 #include "engine.h"
-//#include "link_list.h"
-#include "packet.h"
+#include "connect.h"
 
 #define IP "127.0.0.1"
 #define PORT 1234
@@ -29,12 +28,9 @@
 typedef struct _socket_t
 {
     int32_t status;
-    // int32_t isactived;
-    // int32_t readable;
-    // int32_t writeable;
     int32_t fd;
     int32_t fdx;
-    packet * pt;  //用于数据包的处理
+    connection * ct;  //用于数据包的处理
     //link_list * pending_send; //待发送列表
     //link_list * pending_recv; //待接收列表
 }socket_t;
