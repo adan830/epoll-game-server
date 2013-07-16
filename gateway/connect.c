@@ -44,25 +44,24 @@ void init_connection(connection * ct, int32_t fd) {
     ct->head_index = 0; //标记头的数据
     ct->packet_index = 0; //已读到数据的索引
     ct->max_packet_len = 0; //最大的数据量
-    ct->packet = new_buffer(1024); //为每个连接开辟一个缓冲区
+    ct->bit_index = 0;
+    ct->packet = new_buffer(5); //为每个连接开辟一个缓冲区
 }
 
 void read_packet_head(connection * ct, char * data, uint32_t *index, uint32_t size) {
-	//uint32_t len = strlen(pack); //计算当前读到数据的长度
-    //int pack_index = 0;
     while(ct->head_index < 4 && (*index) < size) {
-        ct->pack_head_len = (ct->pack_head_len << 8) + data[(*index)];
+        ct->pack_head_len += ((uint32_t)data[(*index)]) << (ct->bit_index * 8);
         ct->head_index ++;
         (*index) ++;
     }
-
     //读完包头
     if (ct->head_index == 4) {
+        // memcpy(&ct->pack_head_len, data, ct->head_index); //这里不要用memcpy来做，因为有可能第二个包的长度在第一个包里面了
         ct->max_packet_len = ct->pack_head_len;
-        // ct->packet = 
         ct->packet_data = (char *)malloc(sizeof(char) * ct->max_packet_len);
         ct->packet_index = 0;
         ct->head_index ++;
+        ct->bit_index = 0;
     }
 }
 
@@ -85,17 +84,20 @@ void read_packet_data(connection * ct, char * data, uint32_t *index, uint32_t si
     }
 }
 
-void read_all_packet(connection * ct, char * data, uint32_t size) {
+void read_all_packet(connection * ct) {
     uint32_t index = 0;
-    //uint32_t len = strlen(pack);
+    int32_t size = get_buffer_remaining(ct->packet);
+    char data[size+1];
+    memset(data, 0, sizeof(data));
+    get_buffers(ct->packet, data, size);
     //解决粘包情况
     while(index < size) {
         ct->read_head(ct, data, &index, size);
-        // pt->read_pack(pt, pack, &index, pack_len);
+        ct->read_data(ct, data, &index, size);
         if (ct->packet_index == ct->max_packet_len
             && ct->packet_index != 0) {
             /*
-            //单个包读完写到buf里面
+            单个包读完写到buf里面
             还未完善，发完一个包需对包头重新初始化 
             */
             ct->head_index = 0;
@@ -112,6 +114,8 @@ void copy_packet_data(connection * ct, char * data, uint32_t * start_index, uint
     {
         ct->packet_data[ct->packet_index ++] = data[i];
     }
+    printf("收到的数据包=%s\n",ct->packet_data);
+    // free(ct->packet_data);
 }
 
 void free_connection(connection * ct) {

@@ -28,14 +28,15 @@ typedef struct connection
     uint8_t  head_index; //标记头的数据
     uint32_t packet_index;
     uint32_t max_packet_len; //最大的数据量
-    // char * packet_data; //包数据
+    char * packet_data; //包数据
+    uint8_t bit_index; //包头的位移标识
     buffer * packet;
     // link_list * pending_send; //待发送列表
     // link_list * pending_recv; //待接收列表
     void (*init)(struct connection * ct, int32_t fd);
-    void (*read_head)(struct connection * ct, buffer * data, uint32_t *index, uint32_t size);
-    void (*read_data)(struct connection *pt, buffer * data, uint32_t *index, uint32_t size);
-    void (*read)(struct connection * ct, buffer * data, uint32_t size);
+    void (*read_head)(struct connection * ct, char * data, uint32_t *index, uint32_t size);
+    void (*read_data)(struct connection *pt, char * data, uint32_t *index, uint32_t size);
+    void (*read)(struct connection * ct);
     void (*free)(struct connection * ct);
 }connection;
 
@@ -44,13 +45,15 @@ connection * create_connection(int32_t fd);
 
 void init_connection(connection * ct, int32_t fd);
 //读取包头
-void read_packet_head(connection * ct, buffer * data, uint32_t *index, uint32_t size);
+void read_packet_head(connection * ct, char * data, uint32_t *index, uint32_t size);
 //读取包的数据
-void read_packet_data(connection * ct, buffer * data, uint32_t *index, uint32_t size);
+void read_packet_data(connection * ct, char * data, uint32_t *index, uint32_t size);
 //读取包
-void read_all_packet(connection * ct, buffer * data, uint32_t size);
+// void read_all_packet(connection * ct, buffer * data, uint32_t size);
+void read_all_packet(connection * ct);
+
 //复制包的内容到结构体
-void copy_packet_data(connection * ct, buffer * data, uint32_t * start_index, uint32_t end_index);
+void copy_packet_data(connection * ct, char * data, uint32_t * start_index, uint32_t end_index);
 
 void free_connection(connection * ct);
 #endif

@@ -58,12 +58,36 @@ int main(int argc, char *argv[])
     //message.head = head;
     //message.data = data;
     // int i;
-    char *str = "abcd";
+    // char *str = "0005aa";
+    // char *str1 = "1111";
+    // char *str2 = "2";
+    // char str[20] = {0,0,0,6,'a','a','a','a','a','a',0,0,0,1,'e'};
+    // char *str = "0006aaaaaa0001e";
     // char *str1 = "er";
     // i = 6;
-   send(sockfd, str, strlen(str), 0 );
-    while( 1 )
-    {
+    // printf("%d\n",strlen(str));
+    int len1 = 6;
+    char * str = "aaaaaa";
+    // int len2 = 1;
+    // char * str = (char *)malloc(sizeof(char) * (4+6+4+1));
+    // memcpy(str, &len1, 4);
+    //printf("------------=%s\n",str);
+    // char *s1 = "aaaaaa";
+    // memcpy(str + 5, s1, 6);
+    // memcpy(str + 11, &len2, 4);
+    // char *s2 = "e";
+    // memcpy(str + 15, s2, 1);
+    // int i;
+    // for(i = 0;i < 15; i++){
+    //   printf("i = %c\n",*(str+i));
+    // }
+    // printf("%s\n",str);
+    send(sockfd, &len1, sizeof(len1), 0);
+   send(sockfd, str, 6, 0 );
+    // while( 1 )
+    // {
+      // send(sockfd, str1, strlen(str1), 0 );
+      // send(sockfd, str2, strlen(str2), 0 );
        // // send(sockfd, &i, sizeof(i), 0 );
        //  printf("----------------------------%d\n",send(sockfd, &i, sizeof(i), 0 ));
         // send(sockfd, str, strlen(str), 0 );
@@ -100,7 +124,7 @@ int main(int argc, char *argv[])
  
        //  printf("Received: %s \n",buf);
        //  sleep(1);
-    }
+    // }
  
     close(sockfd);
     return 0;

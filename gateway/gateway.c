@@ -30,8 +30,8 @@ extern engine_t * engine;
 
 int main() {
 
-    signal(SIGINT, sig_free);
-    signal(SIGPIPE, sig_close_socket);
+    // signal(SIGINT, sig_free);
+    // signal(SIGPIPE, sig_close_socket);
 
     engine = new_engine();
     start_engine(engine);

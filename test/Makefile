@@ -17,7 +17,7 @@ test_list:	test_list.o
 		${CC} ${CFLAGS} -o $@ test_list.o ${PROGS} ${LIBS}
 
 test_packet:	test_packet.o
-		${CC} ${CFLAGS} -o $@ test_packet.o ${PROGS1} ${LIBS}
+		${CC} ${CFLAGS} -o $@ test_packet.o ${PROGS} ${PROGS1} ${LIBS}
 
 test_double_list:	test_double_list.o
 		${CC} ${CFLAGS} -o $@ test_double_list.o ${PROGS2} ${LIBS}

@@ -17,6 +17,7 @@
 
 #include "server.h"
 #include "acceptor.h"
+#include "connect.h"
 
 void server_work(engine_t * e) {
     create_acceptor();
@@ -115,7 +116,6 @@ int32_t socket_bind(int32_t sockfd, const struct sockaddr * myaddr, socklen_t ad
 
 handler_t  recv_data(void * e, void * s) {
     char buff[1024];
-    int32_t index = 0;
     int32_t len = 0;
     int32_t offset = 0;
     socket_t * st = (socket_t *)s;
@@ -124,25 +124,34 @@ handler_t  recv_data(void * e, void * s) {
         while (1) {
             memset(buff, 0, sizeof(buff));
             len = recv(st->fd, buff, sizeof(buff) - 1, 0);
-            if (len == 0){
+            if (len == 0) {
                 break; //木有数据了
             }else if (len == -1) {
                 //出错了
             }else {
                 while (len > 0) {
+                // printf("len = %d\n",len);
+                // printf("get_buffer_remaining(ct->packet) = %d\n",get_buffer_remaining(ct->packet));
                 if (buffer_has_remaining(ct->packet)) {
                     int32_t remaining = get_buffer_remaining(ct->packet);
                     if (remaining >= len) {
                         put_buffers_len(ct->packet, buff, offset, len);
+                        if (buffer_has_remaining(ct->packet) == false) {
+                            flip_buffer(ct->packet);
+                            read_all_packet(ct);
+                            clear_buffer(ct->packet);
+                        }
                         offset = 0;
                         len = 0;
-                    }else {
-                        put_buffers_len(ct-packet, buff, offset, remaining);
+                    }
+                    else {
+                        put_buffers_len(ct->packet, buff, offset, remaining);
                         flip_buffer(ct->packet);
-                        //TODO;
+                        read_all_packet(ct);
                         clear_buffer(ct->packet);
                         offset += remaining;
                         len -= remaining;
+                        }
                     }
                 }
             }
@@ -150,23 +159,3 @@ handler_t  recv_data(void * e, void * s) {
     }
     return HANDLER_GO_ON;
 }
-
-
-
-//     if (st->status == ISWRITE) {
-//         while(1){
-//             //表示可以接收数据
-//             int len = recv(st->fd, buff, sizeof(buff) - 1, 0);
-//             if (len == 0){ //没有数据
-//                 break;
-//             }
-//             else if (len == -1) { //错误
-//             }
-//             else {
-//                 //void packet_read(packet *pt, char *pack, uint32_t pack_len);
-//                 (st->ct)->read(st->ct, buff, (uint32_t)len);
-//             }
-//         }
-//     }
-//     return HANDLER_GO_ON;
-// }

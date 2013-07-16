@@ -23,7 +23,7 @@ static buffer * init_buffer(buffer * bf, int32_t capacity) {
     bf->position = 0;
     bf->mark = 0;
     bf->data = (char *)malloc(sizeof(char) * capacity);
-    bzero(bf->data, strlen(bf->data));
+    memset(bf->data, 0, capacity);
     return bf;
 }
 
@@ -106,6 +106,7 @@ char * get_buffers(buffer * bf, char * str, int32_t size) {
         int i;
         for (i = 0; i < size; i++) {
             char * tmp = get_buffer(bf);
+            // printf("tmp = %c\n",*tmp);
             if (tmp != NULL) *(str + i) = *tmp;
         }
     }

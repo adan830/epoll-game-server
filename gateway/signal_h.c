@@ -33,7 +33,8 @@ SigfunC * signal(int signo, SigfunC * func) {
 
 //信号中断回调函数
 void sig_free(int signo) {
-    free_engine(engine);
+    printf("-----------------");
+    // free_engine(engine);
 }
 
 //TODO 套接字断开的信号处理函数
